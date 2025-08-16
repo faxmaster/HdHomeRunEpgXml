@@ -1,17 +1,8 @@
-FROM alpine:latest
+FROM python:3.12-alpine
 
-# Install dependencies from apk package manager.
-RUN apk update && \
-    apk upgrade && \
-    apk --no-cache add python3 curl
+RUN apk add --no-cache curl ca-certificates && update-ca-certificates
+RUN pip install --no-cache-dir urllib3
+RUN curl -fsSL https://raw.githubusercontent.com/faxmaster/HdHomeRunEpgXml/master/hdhomerun.py \
+    -o /hdhomerun.py
 
-# Install python3, pip and urllib3 dependencies.
-RUN curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py && \
-    python3 get-pip.py && \
-    pip install urllib3
-
-# Download the python script from github.
-RUN curl https://raw.githubusercontent.com/faxmaster/HdHomeRunEpgXml/master/hdhomerun.py -o hdhomerun.py
-
-# Expose the command.
-CMD python3 hdhomerun.py > /dev/null 2>&1 ; cat /hdhomerun.xml
+CMD ["sh","-c","python /hdhomerun.py >/dev/null 2>&1 && cat /hdhomerun.xml"]
