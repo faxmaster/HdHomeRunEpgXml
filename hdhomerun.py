@@ -230,7 +230,7 @@ def saveJsonToFile(data, filename):
 def GetHdConnectDevices():
 	WriteLog("Getting Connected Devices.")
 	http = urllib3.PoolManager()
-	discover_url_response = http.request('GET',"http://my.hdhomerun.com/discover")
+	discover_url_response = http.request('GET',"http://ipv4-api.hdhomerun.com/discover")
 	data = discover_url_response.data
 	#WriteLog(data)
 	obj = json.loads(data)
