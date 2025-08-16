@@ -11,7 +11,7 @@ RUN curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py && \
     pip install urllib3
 
 # Download the python script from github.
-RUN curl https://raw.githubusercontent.com/FairfieldTekLLC/HdHomeRunEpgXml/master/hdhomerun.py -o hdhomerun.py
+RUN curl https://raw.githubusercontent.com/faxmaster/HdHomeRunEpgXml/master/hdhomerun.py -o hdhomerun.py
 
 # Expose the command.
 CMD python3 hdhomerun.py > /dev/null 2>&1 ; cat /hdhomerun.xml
