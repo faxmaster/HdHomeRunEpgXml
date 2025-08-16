@@ -1,18 +1,17 @@
-# Pin Alpine for reproducibility
-FROM alpine:3.20
+FROM alpine:latest
 
-# Python + pip + TLS certs + curl
-RUN apk add --no-cache python3 py3-pip ca-certificates curl \
- && update-ca-certificates
+# Install dependencies from apk package manager.
+RUN apk update && \
+    apk upgrade && \
+    apk --no-cache add python3 curl
 
-WORKDIR /app
+# Install python3, pip and urllib3 dependencies.
+RUN curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py && \
+    python3 get-pip.py && \
+    pip install urllib3
 
-# urllib3 (via pip)
-RUN python3 -m pip install --no-cache-dir --upgrade pip urllib3
+# Download the python script from github.
+RUN curl https://raw.githubusercontent.com/FairfieldTekLLC/HdHomeRunEpgXml/master/hdhomerun.py -o hdhomerun.py
 
-# Fetch the script (follow redirects)
-RUN curl -L https://raw.githubusercontent.com/faxmaster/HdHomeRunEpgXml/master/hdhomerun.py -o hdhomerun.py
-
-# Run the script; then print the generated XML
-# Use `&&` if you want to fail when the script fails; use `;` to always cat.
-CMD sh -c "python3 hdhomerun.py >/dev/null 2>&1 && cat /hdhomerun.xml"
+# Expose the command.
+CMD python3 hdhomerun.py > /dev/null 2>&1 ; cat /hdhomerun.xml
